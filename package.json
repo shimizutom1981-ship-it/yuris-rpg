@@ -1,1 +1,9 @@
-{"name":"yuris-sleeping-civilization","version":"1.0.0","private":true,"type":"module","scripts":{"test":"node tests.mjs"}}
+{
+  "name": "yuris-sleeping-civilization",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests.mjs && node navigation-tests.mjs && node integration.mjs && node pwa-tests.mjs"
+  }
+}

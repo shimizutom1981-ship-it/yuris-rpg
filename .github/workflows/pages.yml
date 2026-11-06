@@ -18,8 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node tests.mjs
-      - run: node integration.mjs
+      - run: npm test
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -34,3 +33,4 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
