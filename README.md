@@ -32,10 +32,12 @@
 
 ## 正本と公開
 ソースの正本は https://github.com/shimizutom1981-ship-it/yuris-rpg です。
-GitHub Pages用ワークフローは、テスト成功後に `dist/` を配信します。初回のみ Settings → Pages → Source を「GitHub Actions」に設定してください。
+GitHub Pages用ワークフローは、テスト成功後に `dist/` を配信します。Settings → Pages → Source は「GitHub Actions」に設定済みです。
+
+公開URL：https://shimizutom1981-ship-it.github.io/yuris-rpg/
 
 既存のChatGPT Sites版とは自動同期されません。ブラウザの保存領域も公開先ごとに別です。旧サイトのメニューでセーブを書き出し、新サイトで読み込むと冒険を引き継げます。
 
 ## 作業記録
 2026-11-06 JST / ChatGPT / 原作設定確認、5エリアの短編RPG、戦闘・謎解き・セーブ・エンディング実装、経路と戦闘・通し検証 / 残り：ユーザープレイによる難易度と演出の調整。
-2026-11-06 JST / ChatGPT / GitHub移行用ソース・テスト・Pages自動公開を準備 / 残り：初回デプロイ結果の確認。
+2026-11-06 JST / ChatGPT / GitHubへ全ソース・テストを登録、Pages初回設定と公開完了、GitHub Actionsのテストとデプロイ成功を確認 / 残り：ユーザープレイによる調整。
