@@ -26,7 +26,7 @@ export function tappedObject(map,state,px,py){
   return {o,d:Math.hypot(px-ox,py-oy),hit:Math.abs(px-ox)<=half&&py>=top&&py<=o.y*16+20};
  }).filter(v=>v.hit).sort((a,b)=>a.d-b.d)[0]?.o||null;
 }
-const pools={forest:['wolf','moth'],mine:['crawler','moth'],ruins:['sentinel','crawler']};
+const pools={ridge:['wolf','moth'],canal:['sentinel','crawler'],forest:['wolf','moth'],mine:['crawler','moth'],ruins:['sentinel','crawler']};
 export function encounterAfterStep(map,state,rng=Math.random){
  if(!pools[state.map])return null;
  if(map.objects.some(o=>['npc','spring','exit'].includes(o.type)&&Math.abs(o.x-state.x)+Math.abs(o.y-state.y)<=2))return null;

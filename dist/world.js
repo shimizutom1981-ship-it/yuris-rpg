@@ -14,8 +14,25 @@ obj(mine,'forestBack','exit',16,23,{to:'forest',tx:28,ty:5,label:'雪解けの�
 const ruins=map('古代遺跡・予備導管','ruins',19);border(ruins);rect(ruins,3,3,28,20,'r');for(const [x,y,w,h]of [[3,3,10,2],[21,3,10,2],[3,8,9,2],[22,8,9,2],[3,15,9,2],[22,15,9,2]])rect(ruins,x,y,w,h,'#');rect(ruins,15,3,3,20,'q');rect(ruins,5,11,24,2,'q');
 obj(ruins,'mineBack','exit',16,23,{to:'mine',tx:16,ty:4,label:'北の坑道へ'});obj(ruins,'lore1','tablet',13,19,{lore:'flow',title:'予備系統の石碑',text:'「まず水を通す。次に風を逃がす。\n最後に灯をともす。主幹は止めてはならない。」\n\nノア「水、風、灯の順だね。予備の通り道を作るんだよ。」'});obj(ruins,'water','valve',7,18,{label:'水の弁',symbol:'水',color:'#70c8d6'});obj(ruins,'wind','valve',26,12,{label:'風の弁',symbol:'風',color:'#a5d4ac'});obj(ruins,'light','valve',7,6,{label:'灯の弁',symbol:'灯',color:'#e3bf7d'});obj(ruins,'lore2','tablet',27,6,{lore:'keepers',title:'残された使命',text:'「我らが去った後も、大地の調整を続けよ。\n人々の暮らす地を、どうか守り続けてほしい。」\n\nエド「……ずっと、一人で守っていたのかな。」'});obj(ruins,'r1','enemy',16,16,{enemy:'sentinel'});obj(ruins,'r2','enemy',21,12,{enemy:'sentinel'});obj(ruins,'r3','enemy',12,6,{enemy:'crawler'});obj(ruins,'ruinchest','chest',27,20,{item:'relic',label:'古い守りの留め金'});obj(ruins,'ruinspring','spring',18,20);obj(ruins,'heartExit','exit',16,3,{to:'heart',tx:16,ty:21,label:'大地の心臓へ',lock:'gate'});
 const heart=map('大地の心臓','heart',23);border(heart);rect(heart,3,3,28,20,'v');rect(heart,13,4,7,20,'r');rect(heart,6,10,22,6,'r');rect(heart,10,7,14,12,'r');rect(heart,15,7,3,17,'q');obj(heart,'heartBack','exit',16,23,{to:'ruins',tx:16,ty:4,label:'予備導管へ'});rect(heart,14,22,5,3,'r');obj(heart,'greatCrystal','crystal',16,5,{w:2,h:2});obj(heart,'bear','boss',16,11,{enemy:'bear',name:'熊型機霊'});obj(heart,'heartSpring','spring',19,20);obj(heart,'memory','tablet',11,16,{lore:'promise',title:'二人の約束',text:'ノア「つらくなったら、止めてって言うね。」\nユリス「うん。今度は、二人で決めよう。」\n\n共感覚は、相手を思い通りにする力ではない。\n触れ合い、望み合う間だけ、感覚の断片を分かち合う。'});
+// Episode two uses the same tile and interaction rules as the first journey.
+rect(village,0,13,4,3,'p');obj(village,'ridgeExit','exit',2,14,{to:'ridge',tx:29,ty:20,label:'風見の峠へ',lock:'episode2'});
+const ridge=map('風見の峠','forest',31);border(ridge);rect(ridge,3,18,29,4,'p');rect(ridge,14,3,4,19,'p');rect(ridge,5,7,23,3,'p');rect(ridge,3,3,7,4,'w');
+for(const [x,y]of [[4,12],[7,15],[11,4],[20,4],[24,12],[28,13],[22,22],[7,22]])obj(ridge,'ridgeTree'+x+'_'+y,'tree',x,y);
+obj(ridge,'ridgeBack','exit',30,20,{to:'village',tx:3,ty:14,label:'ノルヴィクへ'});
+obj(ridge,'mira','npc',13,14,{sprite:'woman',name:'調査員ミラ',marker:'!'});
+obj(ridge,'ridgeCamp','spring',17,16);obj(ridge,'ridgeCache','chest',6,8,{item:'potions',label:'薬草 ×3'});
+obj(ridge,'ridgeRecord','tablet',25,7,{lore:'ridge',title:'山の記録',text:'「中継は山に始まり、川を渡り、空へ還る。」\n\nノア「音の高さじゃなくて、流れが通る順番なんだね。」'});
+obj(ridge,'canalExit','exit',16,3,{to:'canal',tx:16,ty:21,label:'沈黙の水路へ',lock:'ridgeKey'});
+const canal=map('沈黙の水路','ruins',37);border(canal);rect(canal,7,3,3,20,'w');rect(canal,24,3,3,20,'w');rect(canal,2,11,30,3,'b');rect(canal,14,3,5,21,'q');
+obj(canal,'canalBack','exit',16,23,{to:'ridge',tx:16,ty:4,label:'風見の峠へ'});obj(canal,'canalCamp','spring',19,20);
+obj(canal,'tuneMountain','valve',5,7,{label:'山の調律盤',symbol:'山',color:'#b6c58a'});obj(canal,'tuneRiver','valve',29,17,{label:'川の調律盤',symbol:'川',color:'#82d4e3'});obj(canal,'tuneSky','valve',20,6,{label:'空の調律盤',symbol:'空',color:'#d9bbec'});
+obj(canal,'canalRecord','tablet',13,18,{lore:'canal',title:'調律の手引き',text:'「山 → 川 → 空。逆流を検知すると調律を解除する。」\n\nエド「順番を間違えても壊れない。もう一度、山から試そう。」'});
+obj(canal,'spireExit','exit',16,3,{to:'spire',tx:16,ty:21,label:'風の中継塔へ',lock:'canalOpen'});
+const spire=map('風の中継塔','heart',43);border(spire);rect(spire,3,3,28,20,'v');rect(spire,12,3,10,21,'r');rect(spire,6,9,22,8,'r');rect(spire,15,3,3,21,'q');
+obj(spire,'spireBack','exit',16,23,{to:'canal',tx:16,ty:4,label:'沈黙の水路へ'});obj(spire,'spireCamp','spring',19,20);obj(spire,'spireCrystal','crystal',16,4);
+obj(spire,'warden','boss',16,11,{enemy:'warden',name:'中継塔の守り手'});
+obj(spire,'spireRecord','tablet',9,15,{lore:'spire',title:'二つの署名',text:'古い記録の最後に、二人分の署名が残っている。\n「一つの塔に背負わせないこと。いつか、声をつなぐ者のために。」\n\nノア「……私、この言葉を知っている気がする。」'});
 for(const m of [village,forest,mine,ruins,heart])m.objects=m.objects.filter(o=>o.type!=='enemy');
-return {village,forest,mine,ruins,heart};}
-export function visibleObject(o,s){return !(s.collected.includes(o.id)||s.defeated.includes(o.id)||(o.id==='bear'&&s.flags.bear));}
+return {village,forest,mine,ruins,heart,ridge,canal,spire};}
+export function visibleObject(o,s){return !(s.collected.includes(o.id)||s.defeated.includes(o.id)||(o.id==='bear'&&s.flags.bear)||(o.id==='warden'&&s.flags.spireSaved)||(o.id==='ridgeExit'&&!s.flags.ending));}
 export function solid(m,x,y,s){if(x<0||y<0||x>=W||y>=H||['#','w','v'].includes(m.tiles[y][x]))return true;return m.objects.some(o=>visibleObject(o,s)&&['house','tree','well','crystal','pump'].includes(o.type)&&x>=o.x&&x<o.x+(o.w||1)&&y>=o.y&&y<o.y+(o.h||1));}
-

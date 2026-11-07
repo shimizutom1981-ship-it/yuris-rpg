@@ -2,7 +2,7 @@
   "id": "./",
   "name": "ユリスと眠れる古代文明 — 星灯りの坑道",
   "short_name": "ユリスRPG",
-  "description": "ユリス・エド・ノアと古代遺跡を探索する物語RPG。タップで移動、オフラインでも冒険。",
+  "description": "タップで旅するRPG。星灯りの坑道と風の記憶、二つの冒険。魔法・スキル・熟練度。",
   "lang": "ja",
   "start_url": "./",
   "scope": "./",
@@ -10,8 +10,23 @@
   "background_color": "#101c23",
   "theme_color": "#101f27",
   "icons": [
-    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
-    {"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
