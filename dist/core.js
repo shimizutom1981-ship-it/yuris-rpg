@@ -15,14 +15,19 @@ export const skills={
  cure:{name:'癒しの光',cost:7,desc:'二人を回復・エドも復帰',track:'healing'},
  barrier:{name:'守護の幕',cost:8,desc:'3ターン、二人の被害を45%軽減',track:'support'},
  rally:{name:'勇気の詠唱',cost:7,desc:'3ターン、与えるダメージを35%増加',track:'support'},
- break:{name:'霊鎖',cost:8,desc:'敵1体の攻撃を3ターン40%低下',track:'support'}
+ break:{name:'霊鎖',cost:5,desc:'敵1体の攻撃を3ターン40%低下',track:'support'}
 };
 export const masteryNames={sword:'剣技',magic:'攻撃魔法',healing:'回復魔法',support:'補助魔法'};
 export const rank=(s,k)=>1+[5,15,30,50].filter(n=>(s.mastery?.[k]||0)>=n).length;
+export const supportEffects=s=>({barrier:45+(rank(s,'support')-1)*3,rally:35+(rank(s,'support')-1)*4,weaken:40+(rank(s,'support')-1)*3});
+export function skillDescription(s,id){const fx=supportEffects(s);return id==='barrier'?`使用ターン込み3ターン、二人の被害を${fx.barrier}%軽減`:id==='rally'?`次の3ターン、ユリスの与えるダメージを${fx.rally}%増加（エドの援護を除く）`:id==='break'?`敵1体の攻撃を使用ターン込み3ターン${fx.weaken}%低下`:skills[id].desc;}
+export const currentIntent=(b,e)=>e.intent[(b.turn+(e.intentOffset||0))%e.intent.length];
+export function staggerRidge(b){b.foes.forEach((e,i)=>{e.intentOffset=i%e.intent.length;});return b;}
+export function stabilizationGain(b){if(b.type!=='warden')return 2;return ['charge','guard'].includes(currentIntent(b,b.foes[0]))||b.barrier>0||b.foes[0].weaken>0?2:1;}
 enemies.warden={name:'中継塔の守り手',hp:280,atk:28,xp:140,gold:120,kind:'sentinel',intent:['charge','heavy','drain','guard','heavy'],boss:true};
 export function beginBattle(type,id,companions=[]){const e=enemies[type];const foes=[type,...companions].map((t,i)=>({...enemies[t],type:t,currentHp:enemies[t].hp,index:i,weaken:0}));return {...e,type,id,foes,target:0,currentHp:foes.reduce((n,e)=>n+e.hp,0),hp:foes.reduce((n,e)=>n+e.hp,0),xp:foes.reduce((n,e)=>n+e.xp,0),gold:foes.reduce((n,e)=>n+e.gold,0),turn:0,focus:0,barrier:0,rally:0,stability:0,heard:false,result:null};}
 const intentText={bite:'通常攻撃',charge:'力をためる',heavy:'強攻撃！',guard:'装甲を固める',drain:'霊流の乱れ'};
-export const intentName=b=>b.foes.filter(e=>e.currentHp>0).map(e=>e.name+'：'+intentText[e.intent[b.turn%e.intent.length]]).join(' ／ ');
+export const intentName=b=>b.foes.filter(e=>e.currentHp>0).map(e=>e.name+'：'+intentText[currentIntent(b,e)]).join(' ／ ');
 export function battleTurn(s,b,action,rng=Math.random){
  if(b.result)return {result:b.result,lines:[]};const spec=skills[action];
  if(spec&&s.mp<spec.cost)return {invalid:'集中力が足りない。防御で回復しよう。'};
@@ -44,22 +49,22 @@ export function battleTurn(s,b,action,rng=Math.random){
  if(action==='barrier'){b.barrier=3;lines.push('守護の幕！ このターンを含む3ターン、被害を軽減。');}
  if(action==='rally'){b.rally=4;lines.push('勇気の詠唱！ 次の3ターン、攻撃を強化。');}
  if(action==='break'){target.weaken=3;lines.push(`${target.name}を霊鎖で包む。3ターン、攻撃力低下。`);}
- if(action==='listen'){if(b.boss){b.heard=true;b.stability++;lines.push('ノアと手を重ね、願いを聴いた。「流れを……つないで……」 安定度 +1');}else{b.focus=2;lines.push('次の2回の攻撃を強化。');}s.mp=Math.min(maxMp(s),s.mp+3);}
+ if(action==='listen'){if(b.boss){const gain=b.type==='warden'&&b.heard?0:1;b.heard=true;b.stability+=gain;lines.push(gain?'ノアと手を重ね、願いを聴いた。「流れを……つないで……」 安定度 +1':'願いは届いている。予告を見て霊流を整えよう。');}else{b.focus=2;lines.push('次の2回の攻撃を強化。');}s.mp=Math.min(maxMp(s),s.mp+3);}
  if(action==='guard'){s.mp=Math.min(maxMp(s),s.mp+5);lines.push('二人は身を守った。集中力 +5');}
  if(action==='potion')lines.push('薬草で二人を回復した。');
- if(action==='stabilize'){b.stability+=2;power=18;lines.push('霊流を整えた。安定度 +2');}
- if(power){if(b.focus>0){power=Math.round(power*1.5);b.focus--;}if(b.rally>0)power=Math.round(power*(1.35+(rank(s,'support')-1)*.04));
- for(const e of all?b.foes.filter(e=>e.currentHp>0):[target]){let hit=power;if(e.intent[b.turn%e.intent.length]==='guard'&&action!=='flare')hit=Math.round(hit*.55);if(e.boss&&action!=='stabilize')hit=Math.round(hit*.55);e.currentHp=Math.max(0,e.currentHp-hit);lines.push(`${e.name} −${hit}`);}
+ if(action==='stabilize'){const gain=stabilizationGain(b);b.stability+=gain;power=18;lines.push(`霊流を整えた。安定度 +${gain}`);}
+ if(power){if(b.focus>0){power=Math.round(power*1.5);b.focus--;}if(b.rally>0)power=Math.round(power*(1+supportEffects(s).rally/100));
+ for(const e of all?b.foes.filter(e=>e.currentHp>0):[target]){let hit=power;if(currentIntent(b,e)==='guard'&&action!=='flare')hit=Math.round(hit*.55);if(e.boss&&action!=='stabilize')hit=Math.round(hit*.55);e.currentHp=Math.max(0,e.currentHp-hit);lines.push(`${e.name} −${hit}`);}
  if(s.edHp>0&&['attack','skill','sweep'].includes(action)){const assist=5+s.level*2+s.weapon*2;target.currentHp=Math.max(0,target.currentHp-assist);lines.push(`エドの援護 −${assist}`);}}
  if(spec?.track){s.mastery??={};const before=rank(s,spec.track);s.mastery[spec.track]=Math.min(50,(s.mastery[spec.track]||0)+1);if(rank(s,spec.track)>before)lines.push(`${masteryNames[spec.track]}の熟練度が Lv.${rank(s,spec.track)} に！`);}
  b.currentHp=b.foes.reduce((n,e)=>n+e.currentHp,0);
  if(b.boss&&(b.stability>=7||(b.heard&&b.foes[0].currentHp===0))){b.result='win';return {result:'win',lines:[...lines,'機霊の苦しみが静まった。']};}
  if(!b.boss&&b.currentHp===0){b.result='win';return {result:'win',lines};}
  if(b.boss&&b.foes[0].currentHp===0){b.foes[0].currentHp=1;b.currentHp=1;lines.push('力だけでは救えない。「声を聴く」を使おう。');}
- for(const e of b.foes.filter(e=>e.currentHp>0)){const intent=e.intent[b.turn%e.intent.length];
+ for(const e of b.foes.filter(e=>e.currentHp>0)){const intent=currentIntent(b,e);
  if(intent==='charge')lines.push(`${e.name}が力をためる。`);
  else if(intent==='guard')lines.push(`${e.name}が身を固める。`);
- else{let hit=Math.max(2,e.atk+jitter()-s.armor*3);if(intent==='heavy')hit=Math.round(hit*1.9);if(e.weaken>0)hit=Math.round(hit*(.6-(rank(s,'support')-1)*.03));if(b.barrier>0)hit=Math.round(hit*(.55-(rank(s,'support')-1)*.03));if(guarding)hit=Math.round(hit*.28);hit=Math.max(1,hit);s.hp=Math.max(0,s.hp-hit);if(s.edHp>0)s.edHp=Math.max(0,s.edHp-Math.round(hit*.55));if(intent==='drain')s.mp=Math.max(0,s.mp-2);lines.push(`${e.name}の攻撃 −${hit} HP`);}
+ else{let hit=Math.max(2,e.atk+jitter()-s.armor*3);if(intent==='heavy')hit=Math.round(hit*1.9);if(e.weaken>0)hit=Math.round(hit*(1-supportEffects(s).weaken/100));if(b.barrier>0)hit=Math.round(hit*(1-supportEffects(s).barrier/100));if(guarding)hit=Math.round(hit*.28);hit=Math.max(1,hit);s.hp=Math.max(0,s.hp-hit);if(s.edHp>0)s.edHp=Math.max(0,s.edHp-Math.round(hit*.55));if(intent==='drain')s.mp=Math.max(0,s.mp-2);lines.push(`${e.name}の攻撃 −${hit} HP`);}
  if(e.weaken>0)e.weaken--;}
  if(b.barrier>0)b.barrier--;if(b.rally>0)b.rally--;b.turn++;
  if(s.hp===0){b.result='lose';return {result:'lose',lines:[...lines,'ノアとエドがユリスを安全な場所へ運んだ。']};}return {lines};
