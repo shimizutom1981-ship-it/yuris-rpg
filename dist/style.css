@@ -14,3 +14,5 @@
 @media(orientation:landscape) and (max-height:500px){header{height:52px}main{grid-template-columns:minmax(0,1fr) 200px;padding:0 8px;gap:12px}.scene{aspect-ratio:1.6}.in-battle .scene{aspect-ratio:1.8}}
 
 #targetList{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}#targetList button{font-size:12px;padding:10px;flex:1;min-width:120px}#targetList button[aria-pressed=true]{border-color:#e7cb85;background:#385655}#battleEffects{font-size:12px;color:#b9e4ca;min-height:20px;margin:8px 0}.battle-top{align-items:flex-start;gap:10px}#enemyIntent{max-width:58%;white-space:normal;font-size:11px}#commands button small{line-height:1.5} @media(max-width:720px){#enemyIntent{font-size:8px;padding:5px;max-width:57%}#enemyName{font-size:13px}#targetList button{font-size:10px;padding:8px;min-width:90px}#commands{grid-template-columns:repeat(3,minmax(0,1fr))}#commands button{min-height:58px}#battleEffects{font-size:10px}}
+/* Keep the optional topic action reachable on narrow phones. */
+@media(max-width:520px){header{height:auto;min-height:62px;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}header nav{flex-wrap:wrap;max-width:100%}}

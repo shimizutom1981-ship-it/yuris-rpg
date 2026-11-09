@@ -1,7 +1,7 @@
 // Keep each deployed copy scoped; never delete other games' caches on github.io.
 const PREFIX='yuris-rpg:'+new URL(self.registration.scope).pathname+':';
-const CACHE=PREFIX+'2026-11-07-episode2-v2';
-const FILES=['./','./index.html','./style.css','./game.js','./core.js','./world.js','./render.js','./navigation.js','./pwa.js','./icon.svg','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png','./icons/apple-touch-icon.png'];
+const CACHE=PREFIX+'2026-11-09-free-exploration-v1';
+const FILES=['./','./index.html','./style.css','./game.js','./core.js','./exploration.js','./world.js','./render.js','./navigation.js','./pwa.js','./icon.svg','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',event=>{event.waitUntil((async()=>{
  const cache=await caches.open(CACHE);
  // Reload avoids assembling a new release from stale HTTP-cache files.
