@@ -20,3 +20,14 @@ get('journalBtn').click();assert(get('modalBody').innerHTML.includes('4/4'));get
 // Continue the exact first-episode save into episode two through real UI callbacks.
 await approach('victor');assert(status().state.flags.episode2);
 await approach('ridgeExit');assert.equal(status().state.map,'ridge');await approach('mira');assert(status().state.flags.ridgeKey);await approach('ridgeRecord');await approach('ridgeCamp');await approach('canalExit');assert.equal(status().state.map,'canal');await approach('canalRecord');await approach('tuneSky');assert(!status().state.flags.tuneSky);await approach('tuneMountain');await approach('tuneRiver');await approach('tuneSky');assert(status().state.flags.canalOpen);await approach('canalCamp');await approach('spireExit');assert.equal(status().state.map,'spire');await approach('spireRecord');await approach('spireCamp');await approach('warden');assert(status().state.flags.spireSaved);assert.equal(status().state.map,'village');await approach('victor');assert(status().state.flags.episode2Done);get('closeModal').click();const finalSave=JSON.parse(storage.get('yuris-norvik-save-v1'));assert(finalSave.flags.episode2Done);assert.equal(finalSave.lore.length,7);assert(finalSave.mastery.sword>0);console.log(`PASS second episode: ${finalSave.steps} total steps, both endings, 7 records, mastery persisted`);
+
+// Optional free exploration must work through the same phone tap/dialog callbacks.
+function choose(label){const b=get('dialogChoices').children.find(b=>b.textContent===label);assert(b,`choice ${label}`);b.click();}
+await approach('townNotice');choose('掲示を読む');await settle();choose('立ち去る');assert(status().state.flags.lampKnown);
+await approach('worktable');choose('図面を調べる');await settle();choose('立ち去る');
+await approach('scrapbox');choose('使用許可のある廃材を取る');await settle();choose('立ち去る');
+await approach('worktable');choose('廃材から巻線を作る');await settle();choose('立ち去る');
+await approach('southlamp');const beforeLamp=status().state.gold;choose('作った巻線で直す');await settle();assert.equal(status().state.gold,beforeLamp+15);choose('灯りを消して確かめる');await settle();assert(status().state.flags.lampDark);choose('灯りをつける');await settle();choose('立ち去る');assert(!status().state.flags.lampDark);
+await approach('finn');get('topicsBtn').click();choose('町の遊び');await settle();choose('話を終える');
+assert(JSON.parse(storage.get('yuris-norvik-save-v1')).flags.lampFixed);
+console.log('PASS free-exploration tap UI: inspect, craft, repair, light toggle, topic conversation, and saved state');
